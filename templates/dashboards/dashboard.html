@@ -1,0 +1,205 @@
+{% extends 'base.html' %} {% block content %}
+<style>
+  :root {
+    --dash-primary: #6366f1;
+    --dash-secondary: #a855f7;
+    --dash-bg: #f8fafc;
+    --dash-card: rgba(255, 255, 255, 0.8);
+    --dash-text: #1e293b;
+    --dash-gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+  }
+
+  .dashboard-container {
+    padding: 2rem 0;
+    background-color: var(--dash-bg);
+    min-height: 80vh;
+  }
+
+  /* Stat Cards */
+  .stat-card {
+    background: var(--dash-card);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: 24px;
+    padding: 1.5rem;
+    transition: all 0.4s;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+  }
+
+  .stat-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+  }
+
+  .stat-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    background: var(--dash-gradient);
+    color: white;
+  }
+
+  .stat-value {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--dash-text);
+    line-height: 1;
+    margin-bottom: 0.5rem;
+  }
+
+  .stat-label {
+    color: #94a3b8;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 0.75rem;
+  }
+
+  /* Welcome Banner */
+  .welcome-banner {
+    background: var(--dash-gradient);
+    border-radius: 24px;
+    padding: 2.5rem;
+    color: white;
+    margin-bottom: 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .welcome-banner::after {
+    content: "";
+    position: absolute;
+    top: -50%;
+    right: -10%;
+    width: 300px;
+    height: 300px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+  }
+
+  .btn-create {
+    background: white;
+    color: var(--dash-primary);
+    border: none;
+    padding: 10px 25px;
+    border-radius: 12px;
+    font-weight: 700;
+    transition: all 0.3s;
+  }
+
+  .btn-create:hover {
+    transform: scale(1.05);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    background: #f8fafc;
+  }
+</style>
+
+<div class="dashboard-container">
+  <div class="container">
+    <div class="row">
+      <!-- Sidebar -->
+      <div class="col-lg-3 mb-4">{% include 'dashboards/sidebar.html' %}</div>
+
+      <!-- Main Content -->
+      <div class="col-lg-9">
+        <!-- Welcome Section -->
+        <div class="welcome-banner">
+          <div class="row align-items-center">
+            <div class="col-md-8">
+              <h2 class="font-weight-bold mb-2">
+                Welcome Back, {{ user.username }}! 👋
+              </h2>
+              <p class="lead mb-4" style="opacity: 0.9">
+                You're doing great! Here's what's happening on your blog today.
+              </p>
+              <button class="btn-create">
+                <i class="fa-solid fa-plus mr-2"></i> Create New Post
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Metrics Grid -->
+        <div class="row">
+          <div class="col-md-4 mb-4">
+            <div class="stat-card">
+              <div
+                class="stat-icon"
+                style="
+                  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+                "
+              >
+                <i class="fa-solid fa-tags"></i>
+              </div>
+              <div class="stat-value">{{ category_count }}</div>
+              <div class="stat-label">Total Categories</div>
+            </div>
+          </div>
+
+          <div class="col-md-4 mb-4">
+            <div class="stat-card">
+              <div
+                class="stat-icon"
+                style="
+                  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+                "
+              >
+                <i class="fa-solid fa-newspaper"></i>
+              </div>
+              <div class="stat-value">{{ blog_count }}</div>
+              <div class="stat-label">Total Posts</div>
+            </div>
+          </div>
+
+          <div class="col-md-4 mb-4">
+            <div class="stat-card">
+              <div
+                class="stat-icon"
+                style="
+                  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+                "
+              >
+                <i class="fa-solid fa-users"></i>
+              </div>
+              <div class="stat-value">24</div>
+              <div class="stat-label">Active Users</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Activity Placeholder -->
+        <div
+          class="card mt-2"
+          style="
+            border-radius: 24px;
+            border: none;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+          "
+        >
+          <div class="card-body p-4">
+            <h5 class="font-weight-bold mb-4">Recent Performance</h5>
+            <div class="bg-light rounded-lg p-5 text-center">
+              <i
+                class="fa-solid fa-chart-line text-muted mb-3"
+                style="font-size: 3rem"
+              ></i>
+              <p class="text-muted mb-0">Analytics integration coming soon!</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

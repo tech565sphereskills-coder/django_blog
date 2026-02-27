@@ -1,0 +1,246 @@
+{% extends 'base.html' %} {% block content %}
+<style>
+  .blog-container {
+    padding-top: 50px;
+    padding-bottom: 80px;
+  }
+
+  .article-title {
+    font-family: "Playfair Display", serif;
+    font-weight: 900;
+    font-size: 3.5rem;
+    line-height: 1.1;
+    color: #1a1a1a;
+    margin-bottom: 25px;
+  }
+
+  .meta-info {
+    font-size: 0.95rem;
+    color: #777;
+    margin-bottom: 30px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+
+  .category-badge {
+    background: #fef9e7;
+    color: #f39c12;
+    padding: 5px 15px;
+    border-radius: 50px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: all 0.3s;
+  }
+
+  .category-badge:hover {
+    background: #f39c12;
+    color: white;
+  }
+
+  .featured-img-wrapper {
+    border-radius: 30px;
+    overflow: hidden;
+    margin-bottom: 50px;
+    box-shadow: 0 15px 45px rgba(0, 0, 0, 0.1);
+  }
+
+  .blog-content-body {
+    font-family:
+      "Inter",
+      system-ui,
+      -apple-system,
+      sans-serif;
+    font-size: 1.25rem;
+    line-height: 1.8;
+    color: #333;
+    letter-spacing: -0.01em;
+  }
+
+  .blog-content-body p {
+    margin-bottom: 30px;
+  }
+
+  .blog-content-body h2,
+  .blog-content-body h3 {
+    font-family: "Playfair Display", serif;
+    font-weight: 800;
+    margin-top: 50px;
+    margin-bottom: 25px;
+  }
+
+  .sidebar-card {
+    background: #fff;
+    border-radius: 24px;
+    border: none;
+    padding: 0;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    margin-bottom: 35px;
+    transition: all 0.3s ease;
+  }
+
+  .sidebar-card:hover {
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+    transform: translateY(-5px);
+  }
+
+  .widget-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 18px 25px;
+    font-family: "Playfair Display", serif;
+    font-weight: 800;
+    font-size: 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .widget-body {
+    padding: 25px;
+  }
+
+  .social-links-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .social-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 12px;
+    border-radius: 15px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    text-decoration: none !important;
+    transition: all 0.3s ease;
+    border: 2px solid #f8f9fa;
+    background: #f8f9fa;
+    color: #444;
+  }
+
+  .social-btn:hover {
+    background: white;
+    border-color: #764ba2;
+    color: #764ba2;
+    transform: scale(1.05);
+  }
+
+  @media (max-width: 991px) {
+    .article-title {
+      font-size: 3rem;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .blog-container {
+      padding-top: 30px;
+    }
+    .article-title {
+      font-size: 2.2rem;
+      margin-bottom: 20px;
+    }
+    .blog-content-body {
+      font-size: 1.1rem;
+    }
+    .featured-img-wrapper {
+      border-radius: 20px;
+      margin-bottom: 30px;
+    }
+    .meta-info {
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+  }
+</style>
+
+<div class="container blog-container">
+  <div class="row">
+    <div class="col-lg-8">
+      <article>
+        <header>
+          <a class="category-badge" href="#!">{{ single_blog.category }}</a>
+          <h1 class="article-title mt-3">{{ single_blog.title }}</h1>
+          <div class="meta-info">
+            <span>By <strong>{{ single_blog.author }}</strong></span>
+            <span>•</span>
+            <span>{{ single_blog.created_at | date:"F d, Y" }}</span>
+          </div>
+        </header>
+
+        <div class="featured-img-wrapper">
+          <img
+            class="img-fluid w-100"
+            src="{{ single_blog.featured_image.url }}"
+            alt="{{ single_blog.title }}"
+          />
+        </div>
+
+        <section class="blog-content-body">
+          <p class="lead" style="font-weight: 500; color: #555">
+            {{ single_blog.short_description }}
+          </p>
+          <div class="main-text">{{ single_blog.blog_body | linebreaks }}</div>
+        </section>
+      </article>
+    </div>
+
+    <aside class="col-lg-4">
+      <div class="sidebar-card">
+        <div class="widget-header">
+          <i class="fa-solid fa-circle-info"></i>
+          {{ about.about_heading }}
+        </div>
+        <div class="widget-body">
+          <p class="text-muted mb-0" style="line-height: 1.6">
+            {{ about.about_description }}
+          </p>
+        </div>
+      </div>
+
+      <div class="sidebar-card">
+        <div class="widget-header">
+          <i class="fa-solid fa-list-ul"></i>
+          Categories
+        </div>
+        <div class="widget-body">
+          <div class="d-flex flex-wrap gap-2">
+            {% for cat in categories %}
+            <a
+              href="{% url 'post_by_category' cat.id %}"
+              class="btn btn-light btn-sm rounded-pill m-1"
+              >{{ cat.category_name }}</a
+            >
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+
+      {% if social_links %}
+      <div class="sidebar-card">
+        <div class="widget-header">
+          <i class="fa-solid fa-share-nodes"></i>
+          Stay Connected
+        </div>
+        <div class="widget-body">
+          <div class="social-links-grid">
+            {% for i in social_links %}
+            <a href="{{ i.link }}" class="social-btn" target="_blank">
+              <i class="fa-brands fa-{{ i.platform | lower }}"></i>
+              {{ i.platform }}
+            </a>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+      {% endif %}
+    </aside>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,95 @@
+<style>
+  :root {
+    --dash-primary: #6366f1;
+    --dash-secondary: #a855f7;
+    --dash-bg: #f8fafc;
+    --dash-card: rgba(255, 255, 255, 0.8);
+    --dash-text: #1e293b;
+    --dash-gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+  }
+
+  /* Sidebar Styling */
+  .dash-sidebar {
+    background: white;
+    border-radius: 20px;
+    padding: 1.5rem;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+    height: fit-content;
+  }
+
+  .dash-nav-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 20px;
+    border-radius: 12px;
+    color: #64748b;
+    font-weight: 600;
+    text-decoration: none !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    margin-bottom: 8px;
+  }
+
+  .dash-nav-link i {
+    font-size: 1.2rem;
+    transition: transform 0.3s;
+  }
+
+  .dash-nav-link:hover {
+    background: #f1f5f9;
+    color: var(--dash-primary);
+    transform: translateX(5px);
+  }
+
+  .dash-nav-link.active {
+    background: var(--dash-gradient);
+    color: white;
+    box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+  }
+</style>
+
+<div class="dash-sidebar sticky-top" style="top: 20px">
+  <div class="text-center mb-4">
+    <div
+      class="bg-light rounded-circle d-inline-flex align-items-center justify-content-center mb-3"
+      style="width: 80px; height: 80px"
+    >
+      <i
+        class="fa-solid fa-user-shield text-primary"
+        style="font-size: 2.5rem"
+      ></i>
+    </div>
+    <h5 class="font-weight-bold mb-0">{{ user.username }}</h5>
+    <p class="text-muted small">Administrator</p>
+  </div>
+
+  <nav class="dash-nav">
+    <a
+      href="{% url 'dashboard' %}"
+      class="dash-nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}"
+    >
+      <i class="fa-solid fa-house-chimney"></i>
+      Dashboard
+    </a>
+    <a
+      href="{% url 'category' %}"
+      class="dash-nav-link {% if request.resolver_match.url_name == 'category' %}active{% endif %}"
+    >
+      <i class="fa-solid fa-layer-group"></i>
+      Categories
+    </a>
+    <a href="#" class="dash-nav-link">
+      <i class="fa-solid fa-file-pen"></i>
+      Posts
+    </a>
+    <a href="#" class="dash-nav-link">
+      <i class="fa-solid fa-users-gear"></i>
+      Users
+    </a>
+    <hr class="my-4" />
+    <a href="{% url 'logout' %}" class="dash-nav-link text-danger">
+      <i class="fa-solid fa-power-off"></i>
+      Log Out
+    </a>
+  </nav>
+</div>

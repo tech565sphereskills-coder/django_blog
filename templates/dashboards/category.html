@@ -1,0 +1,341 @@
+{% extends 'base.html' %} {% block content %}
+<style>
+  :root {
+    --dash-primary: #6366f1;
+    --dash-secondary: #a855f7;
+    --dash-bg: #f8fafc;
+    --dash-card: rgba(255, 255, 255, 0.8);
+    --dash-text: #1e293b;
+    --dash-gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+  }
+
+  .dashboard-container {
+    padding: 2rem 0;
+    background-color: var(--dash-bg);
+    min-height: 80vh;
+  }
+
+  /* Table Styling */
+  .custom-card {
+    background: var(--dash-card);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: 24px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+  }
+
+  .table {
+    margin-bottom: 0;
+  }
+
+  .table thead th {
+    background: #f1f5f9;
+    border-top: none;
+    border-bottom: 1px solid #e2e8f0;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 1px;
+    font-weight: 700;
+    color: #64748b;
+    padding: 1.25rem;
+  }
+
+  .table tbody td {
+    padding: 1.25rem;
+    vertical-align: middle;
+    color: var(--dash-text);
+    font-weight: 500;
+    border-bottom: 1px solid #f1f5f9;
+  }
+
+  .table tbody tr:last-child td {
+    border-bottom: none;
+  }
+
+  .table-hover tbody tr:hover {
+    background-color: rgba(99, 102, 241, 0.02);
+  }
+
+  .btn-add {
+    background: var(--dash-gradient);
+    color: white;
+    border: none;
+    padding: 10px 25px;
+    border-radius: 12px;
+    font-weight: 700;
+    transition: all 0.3s;
+    box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+  }
+
+  .btn-add:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(99, 102, 241, 0.4);
+    color: white;
+  }
+
+  .action-btn {
+    width: 35px;
+    height: 35px;
+    border-radius: 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    text-decoration: none !important;
+  }
+
+  .btn-edit {
+    background: #ecfdf5;
+    color: #10b981;
+  }
+  .btn-edit:hover {
+    background: #10b981;
+    color: white;
+  }
+
+  .btn-delete {
+    background: #fef2f2;
+    color: #ef4444;
+  }
+  .btn-delete:hover {
+    background: #ef4444;
+    color: white;
+  }
+</style>
+
+<div class="dashboard-container">
+  <div class="container">
+    <div class="row">
+      <!-- Sidebar -->
+      <div class="col-lg-3 mb-4">{% include 'dashboards/sidebar.html' %}</div>
+
+      <!-- Main Content -->
+      <div class="col-lg-9">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h2 class="font-weight-bold mb-0">Categories Management</h2>
+          <a href="{% url 'add_category' %}" class="btn btn-add">
+            <i class="fa-solid fa-plus mr-2"></i> Add New Category
+          </a>
+        </div>
+
+        <div class="custom-card">
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th width="80">#</th>
+                  <th>Category Name</th>
+                  <th>Created At</th>
+                  <th>Updated At</th>
+                  <th width="120" class="text-right">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for cat in categories %}
+                <tr>
+                  <td>
+                    <span class="badge badge-light p-2"
+                      >{{ forloop.counter }}</span
+                    >
+                  </td>
+                  <td>
+                    <div class="d-flex align-items-center">
+                      <div
+                        class="bg-primary rounded-lg mr-3 shadow-sm"
+                        style="width: 8px; height: 8px"
+                      ></div>
+                      <strong>{{ cat.category_name }}</strong>
+                    </div>
+                  </td>
+                  <td>{{ cat.created_at }}</td>
+                  <td>{{ cat.updated_at }}</td>
+                  <td class="text-right">
+                    <a
+                      href="{% url 'edit_category' cat.id %}"
+                      class="action-btn btn-edit mr-1"
+                      title="Edit"
+                    >
+                      <i class="fa fa-edit"></i>
+                    </a>
+                    <a
+                      href="{% url 'delete_category' cat.id %}"
+                      class="action-btn btn-delete"
+                      title="Delete"
+                      onclick="
+                        return confirm(
+                          'Are you sure you want to delete this category?',
+                        );
+                      "
+                    >
+                      <i class="fa fa-trash"></i>
+                    </a>
+                  </td>
+                </tr>
+                {% empty %}
+                <tr>
+                  <td colspan="5" class="text-center py-5">
+                    <i
+                      class="fa-solid fa-layer-group text-muted mb-3 d-block"
+                      style="font-size: 3rem; opacity: 0.3"
+                    ></i>
+                    <p class="text-muted mb-0">
+                      No categories found. Start by creating one!
+                    </p>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Bootstrap Delete Confirmation Modal Dependencies -->
+<link
+  rel="stylesheet"
+  href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round"
+/>
+<link
+  rel="stylesheet"
+  href="https://fonts.googleapis.com/icon?family=Material+Icons"
+/>
+
+<!-- Modal HTML -->
+<div id="deleteModal" class="modal fade">
+  <div class="modal-dialog modal-confirm">
+    <div class="modal-content">
+      <div class="modal-header flex-column">
+        <div class="icon-box">
+          <i class="material-icons">&#xE5CD;</i>
+        </div>
+        <h4 class="modal-title w-100">Are you sure?</h4>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-hidden="true"
+        >
+          &times;
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>
+          Do you really want to delete the category "<span
+            id="categoryNameDisplay"
+            class="font-weight-bold text-dark"
+          ></span
+          >"? This process cannot be undone.
+        </p>
+      </div>
+      <div class="modal-footer justify-content-center">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+          Cancel
+        </button>
+        <a id="confirmDeleteBtn" href="#" class="btn btn-danger">Delete</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .modal-confirm {
+    color: #636363;
+    width: 400px;
+  }
+  .modal-confirm .modal-content {
+    padding: 20px;
+    border-radius: 5px;
+    border: none;
+    text-align: center;
+    font-size: 14px;
+  }
+  .modal-confirm .modal-header {
+    border-bottom: none;
+    position: relative;
+  }
+  .modal-confirm h4 {
+    text-align: center;
+    font-size: 26px;
+    margin: 30px 0 -10px;
+    font-family: "Varela Round", sans-serif;
+  }
+  .modal-confirm .close {
+    position: absolute;
+    top: -5px;
+    right: -2px;
+  }
+  .modal-confirm .modal-body {
+    color: #999;
+    font-family: "Varela Round", sans-serif;
+  }
+  .modal-confirm .modal-footer {
+    border: none;
+    text-align: center;
+    border-radius: 5px;
+    font-size: 13px;
+    padding: 10px 15px 25px;
+  }
+  .modal-confirm .modal-footer a {
+    color: #999;
+  }
+  .modal-confirm .icon-box {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto;
+    border-radius: 50%;
+    z-index: 9;
+    text-align: center;
+    border: 3px solid #f15e5e;
+  }
+  .modal-confirm .icon-box i {
+    color: #f15e5e;
+    font-size: 46px;
+    display: inline-block;
+    margin-top: 13px;
+  }
+  .modal-confirm .btn,
+  .modal-confirm .btn:active {
+    color: #fff;
+    border-radius: 4px;
+    background: #60c7c1;
+    text-decoration: none;
+    transition: all 0.4s;
+    line-height: normal;
+    min-width: 120px;
+    border: none;
+    min-height: 40px;
+    border-radius: 3px;
+    margin: 0 5px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: "Varela Round", sans-serif;
+    font-weight: bold;
+  }
+  .modal-confirm .btn-secondary {
+    background: #c1c1c1;
+  }
+  .modal-confirm .btn-secondary:hover,
+  .modal-confirm .btn-secondary:focus {
+    background: #a8a8a8;
+  }
+  .modal-confirm .btn-danger {
+    background: #f15e5e;
+  }
+  .modal-confirm .btn-danger:hover,
+  .modal-confirm .btn-danger:focus {
+    background: #ee3535;
+  }
+</style>
+
+<script>
+  function openDeleteModal(url, name) {
+    document.getElementById("categoryNameDisplay").textContent = name;
+    document.getElementById("confirmDeleteBtn").href = url;
+    $("#deleteModal").modal("show");
+  }
+</script>
+{% endblock %}

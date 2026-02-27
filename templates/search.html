@@ -64,9 +64,9 @@
 </style>
 
 <div class="container mt-5">
-  <h3 class="section-title">Category: {{ category }}</h3>
+  <h3 class="section-title">Search Results: {{ keyword }}</h3>
   <div class="row">
-    {% if posts %} {% for post in posts %}
+    {% if blogs %} {% for post in blogs %}
     <div class="col-md-4">
       <div class="card blog-card">
         <img
@@ -92,8 +92,8 @@
     </div>
     {% endfor %} {% else %}
     <div class="col-12 text-center py-5">
-      <i class="fa-regular fa-face-frown display-4 text-muted mb-3"></i>
-      <p class="lead text-muted">No posts found in this category.</p>
+      <i class="fa-solid fa-magnifying-glass display-4 text-muted mb-3"></i>
+      <p class="lead text-muted">No posts matched your search term.</p>
     </div>
     {% endif %}
   </div>

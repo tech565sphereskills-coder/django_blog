@@ -1,82 +1,315 @@
-{% extends 'base.html' %}
+{% extends 'base.html' %} {% block content %}
+<style>
+  :root {
+    --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --secondary-gradient: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+    --card-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+    --hover-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+    --text-main: #2d3436;
+    --text-muted: #636e72;
+  }
 
-{% block content %}
-    
-{% for post in featured_post %}
-{% if forloop.first %}
-<div class="jumbotron p-3 p-md-5 text-white rounded bg-dark" style="background-image: url({{ post.featured_image.url }});background-blend-mode: overlay;background-size:cover;">
-    <div class="col-md-8 px-0">
-      <h1 class="display-4 font-italic">{{ post.title }}</h1>
-      <p class="lead my-3">{{ post.short_description | truncatewords:30 }}</p>
-      <p class="lead mb-0"><a href="#" class="text-white font-weight-bold">Continue reading...</a></p>
+  /* Hero Section */
+  .hero-wrapper {
+    position: relative;
+    border-radius: 30px;
+    overflow: hidden;
+    margin-bottom: 50px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    height: 500px;
+    transition: all 0.5s ease;
+  }
+
+  @media (max-width: 991px) {
+    .hero-wrapper {
+      height: 400px;
+    }
+    .hero-content h1 {
+      font-size: 2.5rem !important;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .hero-wrapper {
+      height: 350px;
+      border-radius: 20px;
+      margin-bottom: 30px;
+    }
+    .hero-content {
+      padding: 30px 20px;
+    }
+    .hero-content h1 {
+      font-size: 1.8rem !important;
+    }
+    .hero-content p {
+      font-size: 0.9rem;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      line-clamp: 2;
+      overflow: hidden;
+    }
+  }
+
+  .hero-content {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 60px 40px;
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+    color: white;
+    z-index: 2;
+  }
+
+  .hero-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+  }
+
+  .hero-wrapper:hover .hero-image {
+    transform: scale(1.05);
+  }
+
+  .hero-badge {
+    background: var(--secondary-gradient);
+    padding: 6px 15px;
+    border-radius: 50px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 15px;
+    display: inline-block;
+  }
+
+  /* Section Headers */
+  .section-title {
+    font-family: "Playfair Display", serif;
+    font-weight: 900;
+    font-size: 2rem;
+    margin-bottom: 30px;
+    position: relative;
+    display: inline-block;
+    color: var(--text-main);
+  }
+
+  @media (max-width: 767px) {
+    .section-title {
+      font-size: 1.5rem;
+      margin-top: 20px;
+      margin-bottom: 20px;
+    }
+  }
+
+  .section-title::after {
+    content: "";
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 60%;
+    height: 4px;
+    background: var(--primary-gradient);
+    border-radius: 2px;
+  }
+
+  /* Blog Cards */
+  .blog-card {
+    background: white;
+    border-radius: 20px;
+    border: none;
+    overflow: hidden;
+    box-shadow: var(--card-shadow);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    height: 100%;
+    margin-bottom: 30px;
+  }
+
+  .blog-card:hover {
+    transform: translateY(-10px);
+    box-shadow: var(--hover-shadow);
+  }
+
+  .card-img-top {
+    height: 200px;
+    object-fit: cover;
+  }
+
+  .brand-accent {
+    color: #fda085;
+    font-weight: 700;
+  }
+
+  .card-body {
+    padding: 25px;
+  }
+
+  .card-title a {
+    color: var(--text-main);
+    text-decoration: none;
+    font-weight: 800;
+    transition: color 0.3s;
+  }
+
+  .card-title a:hover {
+    color: #764ba2;
+  }
+
+  .sidebar-widget {
+    background: white;
+    border-radius: 24px;
+    padding: 0;
+    overflow: hidden;
+    box-shadow: var(--card-shadow);
+    margin-bottom: 35px;
+    border: none;
+    transition: all 0.3s ease;
+  }
+
+  .sidebar-widget:hover {
+    box-shadow: var(--hover-shadow);
+    transform: translateY(-5px);
+  }
+
+  .widget-header {
+    background: var(--primary-gradient);
+    color: white;
+    padding: 18px 25px;
+    font-family: "Playfair Display", serif;
+    font-weight: 800;
+    font-size: 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .widget-body {
+    padding: 25px;
+  }
+
+  .social-links-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .social-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 12px;
+    border-radius: 15px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    text-decoration: none !important;
+    transition: all 0.3s ease;
+    border: 2px solid #f8f9fa;
+    background: #f8f9fa;
+    color: #444;
+  }
+
+  .social-btn:hover {
+    background: white;
+    border-color: #764ba2;
+    color: #764ba2;
+    transform: scale(1.05);
+  }
+
+  .social-btn i {
+    font-size: 1.2rem;
+  }
+</style>
+
+<div class="main-content">
+  {% for post in featured_posts %} {% if forloop.first %}
+  <div class="hero-wrapper">
+    <img
+      src="{{ post.featured_image.url }}"
+      class="hero-image"
+      alt="{{ post.title }}"
+    />
+    <div class="hero-content">
+      <span class="hero-badge">Featured Story</span>
+      <h1 class="display-3 font-weight-bold">{{ post.title }}</h1>
+      <p class="lead">{{ post.short_description | truncatewords:25 }}</p>
+      <a
+        href="{% if post.slug %}{% url 'blogs' post.slug %}{% else %}#{% endif %}"
+        class="btn btn-warning px-4 py-2 font-weight-bold"
+        >Read Full Article</a
+      >
     </div>
   </div>
-{% endif %}
-{% endfor %}
+  {% endif %} {% endfor %}
 
-<!-- featured posts   -->
- <h3 class="text-uppercase text-warning" style="letter-spacing: 2px;">Featured Posts</h3>
-  <div class="row mb-2">
-    {% for post in featured_post %}
-    {% if forloop.first %}
-    <div class="col-md-6">
-      <div class="card border-0" >
-        <div class="card-body">
-          <h3>{{ post.title }}</h3>
-          <small class="mb-1 text-muted">{{ post.created_at | timesince }} ago | {{ post.author }}</small>
-          <p class="card-text">{{ post.short_description | truncatewords:30 }}</p>
-        </div>
-      </div>
-    </div>
-    {% endif %}
-    {% endfor %}
-  </div>
-  
-  <!-- Recent Articles  -->
-<h3 class="text-uppercase text-warning" style="letter-spacing: 2px;">Recent Articles</h3>
-  <main role="main" class="container p-0">
-    <div class="row">
-      <div class="col-md-8 blog-main">
-
-    {% for post in post %}
-        <div class="blog-post">
-          <h2 class="blog-post-title">{{ post.title }}</h2>
-          <p class="blog-post-meta">{{ post.created_at | timesince }} ago | {{ post.author }}</p>
-
-          <p>{{ post.short_description | truncatewords:30 }}</p>
-         
-          <p>{{ post.blog_body }}</p>
-         
-          
+  <div class="row">
+    <div class="col-lg-8">
+      <h3 class="section-title">Trending Blogs</h3>
+      <div class="row">
+        {% for post in posts %}
+        <div class="col-md-6">
+          <div class="card blog-card">
+            <img
+              src="{{ post.featured_image.url }}"
+              class="card-img-top"
+              alt="{{ post.title }}"
+            />
+            <div class="card-body">
+              <span class="small brand-accent"
+                >{{ post.category.category_name }}</span
+              >
+              <h4 class="card-title mt-2">
+                <a
+                  href="{% if post.slug %}{% url 'blogs' post.slug %}{% else %}#{% endif %}"
+                  >{{ post.title }}</a
+                >
+              </h4>
+              <p class="text-muted small">
+                {{ post.created_at | timesince }} ago • {{ post.author }}
+              </p>
+              <p class="card-text text-muted">
+                {{ post.short_description | truncatewords:15 }}
+              </p>
+            </div>
+          </div>
         </div>
         {% endfor %}
-        <!-- /.blog-post -->
-
       </div>
-      <!-- /.blog-main -->
+    </div>
 
-      <aside class="col-md-4 blog-sidebar">
-        <div class="p-3 mb-3 bg-light rounded">
-          <h4 class="font-italic">About</h4>
-          <p class="mb-0">Etiam porta <em>sem malesuada magna</em> mollis euismod. Cras mattis consectetur purus sit amet fermentum. Aenean lacinia bibendum nulla sed consectetur.</p>
+    <aside class="col-lg-4">
+      <div class="sidebar-widget">
+        <div class="widget-header">
+          <i class="fa-solid fa-circle-info"></i>
+          {{ about.about_heading }}
         </div>
-
-        <div class="p-3">
-          <h4 class="font-italic">Follow Us</h4>
-          <ol class="list-unstyled">
-            <li><a href="#">GitHub</a></li>
-            <li><a href="#">LinkedIn</a></li>
-          </ol>
+        <div class="widget-body">
+          <p class="text-muted mb-0" style="line-height: 1.6">
+            {{ about.about_description }}
+          </p>
         </div>
-      </aside><!-- /.blog-sidebar -->
+      </div>
 
-    </div><!-- /.row -->
-
-  </main><!-- /.container -->
-
+      {% if social_links %}
+      <div class="sidebar-widget">
+        <div class="widget-header">
+          <i class="fa-solid fa-share-nodes"></i>
+          Stay Connected
+        </div>
+        <div class="widget-body">
+          <div class="social-links-grid">
+            {% for i in social_links %}
+            <a href="{{ i.link }}" class="social-btn" target="_blank">
+              <i class="fa-brands fa-{{ i.platform | lower }}"></i>
+              {{ i.platform }}
+            </a>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+      {% endif %}
+    </aside>
+  </div>
 </div>
-
-</body>
-</html>
-
 {% endblock %}
