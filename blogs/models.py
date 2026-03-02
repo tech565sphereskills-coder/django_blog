@@ -37,6 +37,20 @@ class Blog(models.Model):
     def __str__(self):
         return self.title
 
+    @property
+    def author_name(self):
+        try:
+            return self.author.userprofile.display_name
+        except:
+            return self.author.first_name if self.author.first_name else self.author.username
+
+    @property
+    def author_bio(self):
+        try:
+            return self.author.userprofile.safe_bio
+        except:
+            return "No bio available for this author."
+
 
 class Comment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -47,3 +61,22 @@ class Comment(models.Model):
 
     def __str__(self):
         return self.comment
+
+
+class UserProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    bio = models.TextField(max_length=500, blank=True)
+    profile_picture = models.ImageField(upload_to='profiles/%Y/%m/%d/', blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.user.username
+
+    @property
+    def display_name(self):
+        return self.user.first_name if self.user.first_name else self.user.username
+
+    @property
+    def safe_bio(self):
+        return self.bio if self.bio else "No bio available for this author."

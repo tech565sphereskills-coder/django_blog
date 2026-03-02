@@ -1,14 +1,18 @@
-from django.http import HttpResponse
-from django.shortcuts import render, redirect
 from blogs.models import Category, Blog
 from assignments.models import About
 from .forms import RegistrationForm
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib import auth
+from django.core.paginator import Paginator
 
 def home(request):
-    featured_posts = Blog.objects.filter(is_featured=True).order_by('-updated_at')
-    posts = Blog.objects.filter(is_featured=False, status='Published')
+    featured_posts = Blog.objects.filter(is_featured=True, status='Published').order_by('-updated_at')
+    posts = Blog.objects.filter(is_featured=False, status='Published').order_by('-created_at')
+
+    # pagination
+    paginator = Paginator(posts, 4)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
 
     try:
         about = About.objects.get()
@@ -16,7 +20,7 @@ def home(request):
         about = None
     context = {
         'featured_posts': featured_posts,
-        'posts': posts,
+        'page_obj': page_obj,
         'about': about,
     }
     return render(request, 'home.html', context)

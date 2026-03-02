@@ -11,8 +11,5 @@ def get_social_links(request):
     return dict(social_links=social_links)
 
 def get_about(request):
-    try:
-        about = About.objects.get()
-    except About.DoesNotExist:
-        about = None
+    about = About.objects.all().first()
     return dict(about=about)
