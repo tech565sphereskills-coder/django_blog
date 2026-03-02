@@ -1,95 +1,146 @@
+<!-- ================= SIDEBAR COMPONENT ================= -->
+
 <style>
   :root {
-    --dash-primary: #6366f1;
-    --dash-secondary: #a855f7;
-    --dash-bg: #f8fafc;
-    --dash-card: rgba(255, 255, 255, 0.8);
-    --dash-text: #1e293b;
-    --dash-gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+    --side-primary: #4f46e5;
+    --side-bg: #ffffff;
+    --side-border: #e2e8f0;
+    --side-text: #475569;
+    --side-active-bg: #eef2ff;
+    --side-active-text: #4f46e5;
   }
 
-  /* Sidebar Styling */
-  .dash-sidebar {
-    background: white;
+  .sidebar-professional {
+    background: var(--side-bg);
+    border: 1px solid var(--side-border);
     border-radius: 20px;
     padding: 1.5rem;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04);
     height: fit-content;
+    position: sticky;
+    top: 2rem;
   }
 
-  .dash-nav-link {
+  .sidebar-header-pro {
+    text-align: center;
+    padding-bottom: 1.5rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid var(--side-border);
+  }
+
+  .sidebar-avatar {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #4f46e5, #7c3aed);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+    color: white;
+    font-size: 1.5rem;
+    font-weight: 800;
+  }
+
+  .sidebar-username {
+    font-weight: 800;
+    color: #0f172a;
+    font-size: 1.1rem;
+    margin-bottom: 0.2rem;
+  }
+
+  .sidebar-subtitle {
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #94a3b8;
+  }
+
+  .sidebar-nav-pro {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .nav-link-pro {
     display: flex;
     align-items: center;
     gap: 12px;
-    padding: 12px 20px;
+    padding: 12px 16px;
     border-radius: 12px;
-    color: #64748b;
+    color: var(--side-text);
     font-weight: 600;
-    text-decoration: none !important;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    margin-bottom: 8px;
+    text-decoration: none;
+    transition: 0.2s ease;
   }
 
-  .dash-nav-link i {
-    font-size: 1.2rem;
-    transition: transform 0.3s;
+  .nav-link-pro i {
+    width: 20px;
   }
 
-  .dash-nav-link:hover {
-    background: #f1f5f9;
-    color: var(--dash-primary);
+  .nav-link-pro:hover {
+    background: #f8fafc;
+    color: var(--side-primary);
     transform: translateX(5px);
   }
 
-  .dash-nav-link.active {
-    background: var(--dash-gradient);
-    color: white;
-    box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+  .nav-link-pro.active {
+    background: var(--side-active-bg);
+    color: var(--side-active-text);
+  }
+
+  .sidebar-divider {
+    border-top: 1px solid var(--side-border);
+    margin: 1.2rem 0;
+  }
+
+  /* MOBILE */
+  @media (max-width: 991px) {
+    .sidebar-professional {
+      position: relative;
+      top: 0;
+      margin-bottom: 1.5rem;
+    }
   }
 </style>
 
-<div class="dash-sidebar sticky-top" style="top: 20px">
-  <div class="text-center mb-4">
-    <div
-      class="bg-light rounded-circle d-inline-flex align-items-center justify-content-center mb-3"
-      style="width: 80px; height: 80px"
-    >
-      <i
-        class="fa-solid fa-user-shield text-primary"
-        style="font-size: 2.5rem"
-      ></i>
-    </div>
-    <h5 class="font-weight-bold mb-0">{{ user.username }}</h5>
-    <p class="text-muted small">Administrator</p>
+<div class="sidebar-professional">
+  <div class="sidebar-header-pro">
+    <div class="sidebar-avatar">{{ user.username|slice:":1"|upper }}</div>
+    <h5 class="sidebar-username">{{ user.username }}</h5>
+    <p class="sidebar-subtitle mb-0">System Admin</p>
   </div>
 
-  <nav class="dash-nav">
+  <nav class="sidebar-nav-pro">
     <a
       href="{% url 'dashboard' %}"
-      class="dash-nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}"
+      class="nav-link-pro {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}"
     >
-      <i class="fa-solid fa-house-chimney"></i>
+      <i class="fa-solid fa-gauge-high"></i>
       Dashboard
     </a>
+
     <a
       href="{% url 'category' %}"
-      class="dash-nav-link {% if request.resolver_match.url_name == 'category' %}active{% endif %}"
+      class="nav-link-pro {% if request.resolver_match.url_name == 'category' %}active{% endif %}"
     >
-      <i class="fa-solid fa-layer-group"></i>
+      <i class="fa-solid fa-folder-tree"></i>
       Categories
     </a>
-    <a href="#" class="dash-nav-link">
-      <i class="fa-solid fa-file-pen"></i>
+
+    <a
+      href="{% url 'posts' %}"
+      class="nav-link-pro {% if request.resolver_match.url_name == 'posts' %}active{% endif %}"
+    >
+      <i class="fa-solid fa-file-lines"></i>
       Posts
     </a>
-    <a href="#" class="dash-nav-link">
-      <i class="fa-solid fa-users-gear"></i>
-      Users
-    </a>
-    <hr class="my-4" />
-    <a href="{% url 'logout' %}" class="dash-nav-link text-danger">
+
+    <div class="sidebar-divider"></div>
+
+    <a href="{% url 'logout' %}" class="nav-link-pro text-danger">
       <i class="fa-solid fa-power-off"></i>
-      Log Out
+      Logout
     </a>
   </nav>
 </div>

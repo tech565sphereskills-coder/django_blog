@@ -1,0 +1,75 @@
+{% extends 'base.html' %} {% load crispy_forms_tags %} {% block content %}
+
+<div class="container-fluid mt-4">
+  <div class="row">
+    <!-- Sidebar -->
+    <div class="col-lg-3">{% include 'dashboards/sidebar.html' %}</div>
+
+    <!-- Main Content -->
+    <div class="col-lg-9">
+      <div class="card shadow-sm border-0 rounded-4">
+        <div class="card-body p-4">
+          <!-- Header -->
+          <div class="d-flex align-items-center mb-4">
+            <a href="{% url 'posts' %}" class="text-muted mr-3" title="Back">
+              <i class="fa-solid fa-circle-arrow-left fa-2x"></i>
+            </a>
+            <h2 class="font-weight-bold mb-0">Add New Post</h2>
+          </div>
+
+          <form
+            action="{% url 'add_post' %}"
+            method="POST"
+            enctype="multipart/form-data"
+          >
+            {% csrf_token %}
+
+            <style>
+              .form-control,
+              .select,
+              .textarea {
+                border-radius: 12px !important;
+                padding: 10px 15px !important;
+                border: 1px solid #e2e8f0 !important;
+              }
+              select.form-control,
+              select.select {
+                height: 45px !important;
+                padding: 10px 15px !important;
+              }
+              .btn-submit {
+                background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+                color: white;
+                border: none;
+                padding: 12px 30px;
+                border-radius: 14px;
+                font-weight: 700;
+                transition: all 0.3s;
+              }
+              .btn-submit:hover {
+                opacity: 0.9;
+                transform: translateY(-1px);
+                color: white;
+              }
+            </style>
+
+            {{ form | crispy }}
+
+            <div class="mt-4">
+              <button type="submit" class="btn btn-submit">
+                <i class="fa-solid fa-check mr-2"></i> Save Post
+              </button>
+              <a
+                href="{% url 'posts' %}"
+                class="btn btn-light ml-2 p-2 px-4 rounded-lg font-weight-bold text-muted"
+                >Cancel</a
+              >
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

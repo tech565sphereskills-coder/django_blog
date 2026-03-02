@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from blogs.models import Category, Blog
-from .forms import CategoryForm
+from .forms import CategoryForm, BlogForm
 from django.contrib.auth.decorators import login_required
+from django.utils.text import slugify
 
 @login_required(login_url='login')
 def dashboard(request):
@@ -14,6 +15,7 @@ def dashboard(request):
     }
     return render(request, 'dashboards/dashboard.html', context)
 
+
 @login_required(login_url='login')
 def category(request):
     categories = Category.objects.all()
@@ -21,6 +23,7 @@ def category(request):
         'categories': categories,
     }
     return render(request, 'dashboards/category.html', context)
+
 
 @login_required(login_url='login')
 def add_category(request):
@@ -34,6 +37,7 @@ def add_category(request):
         'form': form,
     }
     return render(request, 'dashboards/add_category.html', context)
+
 
 @login_required(login_url='login')
 def edit_category(request, id):
@@ -50,8 +54,64 @@ def edit_category(request, id):
     }
     return render(request, 'dashboards/edit_category.html', context)
 
+
 @login_required(login_url='login')
 def delete_category(request, id):
     category = get_object_or_404(Category, id=id)
     category.delete()
     return redirect('category')
+
+
+@login_required(login_url='login')
+def posts(request):
+    posts = Blog.objects.all()
+    context = {
+        'posts': posts,
+    }
+    return render(request, 'dashboards/posts.html', context)
+
+
+@login_required(login_url='login')
+def add_post(request):
+    if request.method == 'POST':
+        form = BlogForm(request.POST, request.FILES)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.author = request.user
+            post.save() # ID is generated here
+            post.slug = slugify(post.title) + '-' + str(post.id)
+            post.save()
+            return redirect('posts')
+        else:
+            print('form is invalid')
+            print(form.errors)
+    form = BlogForm()
+    context = {
+        'form': form,
+    }
+    return render(request, 'dashboards/add_post.html', context)
+
+
+@login_required(login_url='login')
+def edit_post(request, id):
+    post = get_object_or_404(Blog, id=id)
+    if request.method == 'POST':
+        form = BlogForm(request.POST, request.FILES, instance=post)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.slug = slugify(post.title) + '-' + str(post.id)
+            post.save()
+            return redirect('posts')
+    form = BlogForm(instance=post)
+    context = {
+        'form': form,
+        'post': post,
+    }
+    return render(request, 'dashboards/edit_post.html', context)
+
+
+@login_required(login_url='login')
+def delete_post(request, id):
+    post = get_object_or_404(Blog, id=id)
+    post.delete()
+    return redirect('posts')
