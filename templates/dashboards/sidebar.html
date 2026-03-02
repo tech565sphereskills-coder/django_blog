@@ -119,7 +119,15 @@
       <i class="fa-solid fa-gauge-high"></i>
       Dashboard
     </a>
-
+    {% if perms.auth.view_user %}
+    <a
+      href="{% url 'users' %}"
+      class="nav-link-pro {% if request.resolver_match.url_name == 'users' %}active{% endif %}"
+    >
+      <i class="fa-solid fa-users"></i>
+      Users
+    </a>
+    {% endif %}
     <a
       href="{% url 'category' %}"
       class="nav-link-pro {% if request.resolver_match.url_name == 'category' %}active{% endif %}"
