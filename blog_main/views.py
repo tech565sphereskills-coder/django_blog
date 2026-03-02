@@ -1,3 +1,4 @@
+from django.shortcuts import render, redirect
 from blogs.models import Category, Blog
 from assignments.models import About
 from .forms import RegistrationForm
